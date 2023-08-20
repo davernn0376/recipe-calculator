@@ -1,0 +1,66 @@
+
+def yes_no(question):
+    valid = False
+
+    user_response = input(question).lower()
+    if user_response == "yes" or user_response == "y":
+        return "yes"
+
+    elif user_response == "no" or user_response == "n":
+        return "no"
+
+    else:
+        print("Please enter 'yes' or 'no'.")
+
+
+# Show instructions
+def instructions():
+    print()
+    print("Item name,")
+
+    return ""
+
+
+# Main routine starts here
+
+
+# Ask user if they want see the instructions
+
+ef string_checker(question, min_length, valid_responses):
+    while True:
+        user_response = input(question)
+        if len(user_response) >= min_length and user_response in valid_responses:
+            return user_response
+        else:
+            print("Invalid input. Please try again.")
+
+if want_instructions == "yes":
+    print("instructions go here")
+
+print()
+
+
+# checks that user response is not blank
+def not_blank(question):
+    while True:
+        user_response = input(question)
+
+
+def yes_no(question):
+    valid = False
+
+    while not valid:
+        user_response = input(question).lower()
+        if user_response != "":
+            return user_response
+        else:
+            print("This can't be blank. Enter a response.")
+
+
+def get_servings():
+    while True:
+        servings = input("Enter the number of servings: ")
+        if servings.isdigit():
+            return int(servings)
+        else:
+            print("Invalid input. Please enter a valid number.")
