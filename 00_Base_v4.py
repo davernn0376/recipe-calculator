@@ -109,7 +109,25 @@ def get_input_with_unit(prompt):
 
 
 ingredients = []
+all_ingredients = []
+all_weight = []
+all_unit = []
+all_amount_used = []
+all_unit_used = []
+all_amount_bought = []
+all_unit_bought = []
+all_amount_paid = []
 
+recipe_dict = {
+    "Ingredients": all_ingredients,
+    "weight": all_weight,
+    "unit": all_unit,
+    "amount": all_amount_used,
+    "unit_used": all_unit_used,
+    "amount_bought": all_amount_bought,
+    "unit_bought": all_unit_bought,
+    "amount_paid": all_amount_paid,
+}
 while True:
     ingredient_name = input("Enter an ingredient name (or type 'quit' to finish): ")
     if ingredient_name.lower() == "quit":
@@ -149,7 +167,17 @@ while True:
             amount_used /= 1000  # Convert g to kg before calculation
 
         ingredients.append(
-            (ingredient_name, weight, unit, amount_used, unit_used, amount_bought, unit_bought, amount_paid))
+            (ingredient_name, weight, unit, amount_used, unit_used, amount_bought,
+             unit_bought, amount_paid))
+
+        all_ingredients.append(ingredient_name)
+        all_weight.append(weight)
+        all_unit.append(unit)
+        all_amount_used.append(amount_used)
+        all_unit_used.append(unit_used)
+        all_amount_bought.append(amount_bought)
+        all_unit_bought.append(unit_bought)
+        all_amount_paid.append(amount_paid)
     else:
         print("Ingredient name cannot be empty.")
 
@@ -173,5 +201,12 @@ while True:
     except ValueError:
         print("Invalid input. Please enter a valid integer number of servings.")
 
+# Setup dataframe
+recipe_frame = pandas.DataFrame(recipe_dict)
+
+print(recipe_frame)
+
 price_per_serving = total_cost / servings
 print(f"Price per serving: ${price_per_serving:.2f}")
+
+

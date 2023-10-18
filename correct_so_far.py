@@ -85,7 +85,6 @@ def get_weight():
         except ValueError:
             print("Invalid input. Please enter a valid weight.")
 
-
 def get_float_input(prompt):
     while True:
         try:
@@ -93,26 +92,24 @@ def get_float_input(prompt):
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
-
-def get_unit():
-    while True:
-        unit = input("Enter the unit of measurement for this ingredient ('g', 'ml', 'L', 'kg', or 'sheets'): ").lower()
-        if unit in ['g', 'ml', 'l', 'kg', 'sheets']:
-            return unit
-        else:
-            print("Invalid unit. Please enter 'g', 'ml', 'L', 'kg', or 'sheets'.")
-
-
-def get_float_input(prompt):
+def get_input_with_unit(prompt):
     while True:
         try:
-            value = float(input(prompt))
-            return value
+            input_str = input(prompt)
+            value_str, unit = input_str.split()
+            value = float(value_str)
+            unit = unit.lower()
+            valid_units = ['kg', 'l', 'g', 'ml', 'sheets']
+            if unit not in valid_units:
+                print("Invalid unit. Please enter one of:", ", ".join(valid_units))
+                continue
+            return value, unit
         except ValueError:
-            print("Invalid input. Please enter a valid numeric value.")
+            print("Invalid input. Please enter a valid numeric value and unit separated by a space.")
 
 
 ingredients = []
+
 while True:
     ingredient_name = input("Enter an ingredient name (or type 'quit' to finish): ")
     if ingredient_name.lower() == "quit":
@@ -123,8 +120,9 @@ while True:
             weight, unit = input_str.split()
             weight = float(weight)
             unit = unit.lower()
-            if unit not in ['g', 'ml', 'l', 'kg', 'sheets']:
-                print("Invalid unit. Please enter 'g', 'ml', 'L', 'kg', or 'sheets'.")
+            valid_units = ['kg', 'l', 'g', 'ml', 'sheets']
+            if unit not in valid_units:
+                print("Invalid unit. Please enter one of:", ", ".join(valid_units))
                 continue
         except ValueError:
             print("Invalid input. Please enter the weight and unit separated by a space (e.g., '500 g').")
@@ -135,17 +133,21 @@ while True:
             amount_used, unit_used = amount_used_str.split()
             amount_used = float(amount_used)
             unit_used = unit_used.lower()
-            if unit_used not in ['g', 'ml', 'l', 'kg', 'sheets']:
-                print("Invalid unit. Please enter 'g', 'ml', 'L', 'kg', or 'sheets'.")
+            if unit_used not in valid_units:
+                print("Invalid unit. Please enter one of:", ", ".join(valid_units))
                 continue
         except ValueError:
             print("Invalid input. Please enter a valid numeric value and unit.")
             continue
 
-        amount_bought = get_float_input(f"How much of {ingredient_name} did you buy: ")
-        unit_bought = get_unit()
+        amount_bought, unit_bought = get_input_with_unit(f"How much of {ingredient_name} did you buy (e.g., '500 kg'): ")
 
         amount_paid = get_float_input("Enter the amount paid for the ingredient: ")
+        if unit_used == 'ml' and unit_bought == 'l':
+            amount_used /= 1000  # Convert mL to L before calculation
+        elif unit_used == 'g' and unit_bought == 'kg':
+            amount_used /= 1000  # Convert g to kg before calculation
+
         ingredients.append(
             (ingredient_name, weight, unit, amount_used, unit_used, amount_bought, unit_bought, amount_paid))
     else:
@@ -154,14 +156,13 @@ while True:
 print("List of ingredients:")
 total_cost = 0
 for ingredient, weight, unit, amount_used, unit_used, amount_bought, unit_bought, amount_paid in ingredients:
-    cost = (amount_used / amount_bought) * amount_paid
+    cost = (amount_paid * amount_used) / amount_bought  # Updated calculation
     print(
         f"{ingredient} - {weight} {unit} - Amount Used: {amount_used:.2f} {unit_used} - Amount Bought: {amount_bought:.2f} {unit_bought} - Amount Paid: ${amount_paid:.2f} - Cost: ${cost:.2f}")
     total_cost += cost
 
 print(f"Total cost to make the recipe: ${total_cost:.2f}")
 
-# Calculate the number of servings
 while True:
     try:
         servings = int(input("Enter the number of servings the recipe makes: "))
